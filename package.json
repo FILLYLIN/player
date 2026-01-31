@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "docs:dev": "vitepress dev D:\\网站\\player",
+    "docs:build": "vitepress build D:\\网站\\player",
+    "docs:preview": "vitepress preview D:\\网站\\player"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  }
+}
