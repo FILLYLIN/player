@@ -1,8 +1,30 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: "RedstoneCraft",
-  description: "一个专业的红石生存服务器",
+  base: "/",
+  title: "名字没想好",
+  description: "一个邦多利社区服",
+    // 关键配置：确保静态资源处理
+  vite: {
+    publicDir: 'public',
+    build: {
+      copyPublicDir: true,
+      assetsDir: 'assets',
+      rollupOptions: {
+        output: {
+          assetFileNames: (assetInfo) => {
+            const info = assetInfo.name.split('.')
+            const ext = info[info.length - 1]
+            if (/png|jpe?g|gif|svg/i.test(ext)) {
+              return `assets/images/[name]-[hash][extname]`
+            }
+            return `assets/[name]-[hash][extname]`
+          }
+        }
+      }
+    }
+  },
+
   themeConfig: {
     nav: [
       { text: '首页', link: '/' },
@@ -29,7 +51,7 @@ export default defineConfig({
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/yourname/server-docs' },
-      { icon: 'QQ群聊', link: '1062961472' } // 或者换成 QQ 群链接
+      { icon: 'QQ群', link: 'https://qm.qq.com/q/mjQzjc7Udi' } // 或者换成 QQ 群链接
     ]
   }
 })

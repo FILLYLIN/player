@@ -1,10 +1,16 @@
 {
+  "name": "player-docs",
+  "version": "1.0.0",
+  "description": "",
   "scripts": {
-    "docs:dev": "vitepress dev D:\\网站\\player",
-    "docs:build": "vitepress build D:\\网站\\player",
-    "docs:preview": "vitepress preview D:\\网站\\player"
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "vitepress": "^1.6.4"
+    "vitepress": "^1.0.0"
   }
 }

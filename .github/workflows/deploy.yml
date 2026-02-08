@@ -1,57 +1,85 @@
-# .github/workflows/deploy.yml
-name: Deploy VitePress site to Pages
+name: Deploy VitePress to GitHub Pages
 
 on:
-  # 在推送到 main 分支时触发，如果你的主分支叫 master，请修改这里
   push:
-    branches: [main, master]
-  # 允许在这个 Action 页面手动触发
-  workflow_dispatch:
+    branches: [ main ]
 
-# 设置权限
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# 只允许同时进行一次部署
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
-  # 构建工作
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 
+          fetch-depth: 0
+          
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: npm
+          node-version: 18
+          
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v4
+        
       - name: Install dependencies
-        run: npm ci # 或者 npm install
+        run: npm ci
+        
       - name: Build with VitePress
-        run: npm run docs:build # 确保你的 package.json 里有这个命令
+        run: |
+          echo "=== 开始构建 ==="
+          npm run build
+          
+          echo "=== 手动复制图片 ==="
+          # 确保目标目录存在
+          mkdir -p .vitepress/dist/images
+          
+          # 尝试从不同位置复制图片
+          if [ -f "public/images/logos.png" ]; then
+            cp public/images/logos.png .vitepress/dist/images/
+            echo "✅ 从 public/images/ 复制了 logos.png"
+          elif [ -f "public/image/logos.png" ]; then
+            cp public/image/logos.png .vitepress/dist/images/
+            echo "✅ 从 public/image/ 复制了 logos.png"
+          elif [ -f "logos.png" ]; then
+            cp logos.png .vitepress/dist/images/
+            echo "✅ 从根目录复制了 logos.png"
+          else
+            echo "⚠️ 未找到 logos.png，检查其他位置..."
+            find . -name "*.png" | head -10
+          fi
+          
+          echo "=== 验证构建结果 ==="
+          if [ -f ".vitepress/dist/images/logos.png" ]; then
+            echo "✅ 图片已成功复制到构建结果"
+            ls -la ".vitepress/dist/images/logos.png"
+          else
+            echo "❌ 图片复制失败"
+            echo "当前目录内容:"
+            ls -la
+            echo "public目录:"
+            ls -la public/ 2>/dev/null || echo "public目录不存在"
+          fi
+        
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/.vitepress/dist # ⚠️注意：如果你修改过输出目录，这里要对应修改
+          path: .vitepress/dist
 
-  # 部署工作
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    needs: build
     runs-on: ubuntu-latest
-    name: Deploy
+    needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
