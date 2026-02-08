@@ -6,7 +6,7 @@ hero:
   text: "生存|创造"
   tagline: "也许能开更多的服..."
   image:
-    src: /logos.png
+    src: /images/2.png
     alt: "10人10色"
   actions:
     - theme: brand
