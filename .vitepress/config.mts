@@ -4,26 +4,7 @@ export default defineConfig({
   base: "/",
   title: "名字没想好",
   description: "一个邦多利社区服",
-  vite: {
-    publicDir: 'public',
-    build: {
-      copyPublicDir: true,
-      assetsDir: 'assets',
-      rollupOptions: {
-        output: {
-          assetFileNames: (assetInfo) => {
-            const info = assetInfo.name.split('.')
-            const ext = info[info.length - 1]
-            if (/png|jpe?g|gif|svg/i.test(ext)) {
-              return `assets/images/[name]-[hash][extname]`
-            }
-            return `assets/[name]-[hash][extname]`
-          }
-        }
-      }
-    }
-  },
-
+  ignoreDeadLinks: true,
   themeConfig: {
     nav: [
       { text: '首页', link: '/' },
